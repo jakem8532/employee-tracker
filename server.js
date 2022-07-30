@@ -56,11 +56,12 @@ function start() {
 }
 
 function viewEmployees() {
-    const sql = `SELECT employee.*, role.title
-                AS role_title
+    const sql = `SELECT employee.first_name, employee.last_name, role.title, role.salary, departments.department_name
                 FROM employee
                 JOIN role
                 ON role.id = employee.role_id
+                JOIN departments
+                ON departments.id = role.department_id
                 `
     
     db.query(sql, (err, rows) => {
@@ -147,7 +148,11 @@ function addEmployee() {
 }
 
 function viewRoles() {
-    const sql = `SELECT * FROM role`
+    const sql = `SELECT role.id, role.title, role.salary, departments.department_name
+                AS department
+                FROM role
+                INNER JOIN departments
+                ON departments.id = role.department_id`
 
     db.query(sql, (err, res) => {
         if (err) throw err
